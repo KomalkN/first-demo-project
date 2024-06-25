@@ -18,13 +18,12 @@ jobs:
         uses: actions/checkout@v2
 
       # Step 1: Authenticate using GitHub's OAuth
-      - name: Authenticate with AWS via GitHub OAuth
-        id: aws_oidc
-        uses: aws-actions/aws-cli@v2
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v3
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
-          role-session-name: ${{ secrets.ROLE_SESSION_NAME }}
-          aws-region: ${{ secrets.AWS_region }}
+          aws-region: ${{ secrets.AWS_REGION }}
+        
 
       # Step 2: Install npm packages
       - name: Install npm packages
