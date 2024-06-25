@@ -1,0 +1,32 @@
+name: GitHub to AWS with OIDC and AMI
+
+on:
+  push:
+    branches:
+      - main  # Adjust the branch as needed
+
+permissions:
+  id-token: write  # This is required for requesting the JWT
+  contents: read   # This is required for actions/checkout
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Step 1: Authenticate using GitHub's OAuth
+      - name: Authenticate with AWS via GitHub OAuth
+        id: aws_oidc
+        uses: aws-actions/aws-cli@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-session-name: ${{ secrets.ROLE_SESSION_NAME }}
+          aws-region: ${{ secrets.AWS_region }}
+
+      # Step 2: Install npm packages
+      - name: Install npm packages
+        run: |
+          npm install
